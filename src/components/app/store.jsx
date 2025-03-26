@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import songsSlice from '../redux/song/songSlice'
-import singersSlice from '../redux/singer/singerSlice'
+import singersSlice from '../redux/singer/SingerSlice'
 import albumsSlice from '../redux/album/albumSlice'
 import categoriesSlice from '../redux/category/categorySlice'
+import filterReducer from '../redux/filter/filterSlice'
 import { Category } from "@mui/icons-material";
 
 
@@ -18,6 +19,8 @@ export const store = configureStore({
         // הוספת ה-slice של האלבומים ל-reducer הראשי
         album: albumsSlice,
         // הוספת ה-slice של הקטגוריות ל-reducer הראשי (שגיאת כתיב בשם ה-slice)
-        category: categoriesSlice
+        category: categoriesSlice,
+        
+        filters: filterReducer,
     }
 })

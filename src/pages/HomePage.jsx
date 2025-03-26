@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchSongs } from "../components/redux/song/songSlice";
 import { fetchAlbums } from "../components/redux/album/albumSlice";
-import { fetchSingers } from "../components/redux/singer/singerSlice";
+import { fetchSingers } from "../components/redux/singer/SingerSlice";
 import { fetchCategories } from "../components/redux/category/categorySlice";
 import { Grid, Typography, CircularProgress, Button } from "@mui/material";
 import SongCard from "../components/redux/song/SongCard";

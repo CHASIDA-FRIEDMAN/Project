@@ -2,19 +2,46 @@ import React, { useState } from 'react'; // ייבוא React והוק useState
 import { AppBar, Toolbar, Typography, FormControl, InputLabel, Select, MenuItem, Button } from '@mui/material'; // ייבוא רכיבים מ-Material-UI
 import AddSongModal from './redux/song/AddSongModal'; // ייבוא הקומפוננטה AddSongModal
 import { Maximize } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { setFilterCriteria } from './redux/filter/filterSlice';
 
-const Navbar = ({ filterCriteria, setFilterCriteria, applyFilters }) => { 
+const Navbar = () => {
+  const dispatch = useDispatch();
+  const filterCriteria = useSelector(state => state.filters.filterCriteria);
+  const navigate = useNavigate();
   // הגדרת הקומפוננטה Navbar עם הפרופס filterCriteria, setFilterCriteria, ו-applyFilters
   const [openModal, setOpenModal] = useState(false); // משתנה מצב לניהול פתיחת המודאל
 
   // פונקציה לטיפול בשינויי קלט
   const handleChange = (event) => {
-    
-    setFilterCriteria({
-      ...filterCriteria, // שמירה על הערכים הקיימים ב-filterCriteria
-      [event.target.name]: event.target.value // עדכון הערך של המאפיין ששונה
-    });
+    const { name, value } = event.target;
+
+    let newFilter = {
+      ...filterCriteria,
+      [name]: value
+      // const newFilter = {
+      //   ...filterCriteria, // שמירה על הערכים הקיימים ב-filterCriteria
+      //   [event.target.name]: event.target.value // עדכון הערך של המאפיין ששונה
+    }
+    dispatch(setFilterCriteria(newFilter));
+    // setFilterCriteria(newFilter);
+    //   if (event.target.name === "filterBy" && event.target.value == "Singer") {
+    //     navigate('/singers');
+    // }
+    if (name === "filterBy") {
+      if (value === "All") {
+        navigate('/'); // חזרה לדף הראשי עם כל השירים
+      } else if (value === "Singer") {
+        navigate('/singers'); // ניוד לדף זמרים
+      }
+    }
   };
+  // setFilterCriteria({
+  //   ...filterCriteria, // שמירה על הערכים הקיימים ב-filterCriteria
+  //   [event.target.name]: event.target.value // עדכון הערך של המאפיין ששונה
+  // });
+
 
   // פונקציה ליישום הסינון
   const handleApplyFilters = () => {
@@ -22,25 +49,26 @@ const Navbar = ({ filterCriteria, setFilterCriteria, applyFilters }) => {
   };
 
   return (
-    <AppBar position="static" className="custom-navbar" sx={{marginTop:0, width:1250}}> {/* הוספת מחלקת navbar */}
+    <AppBar position="static" className="custom-navbar" sx={{ marginTop: 0, width: 1250 }}> {/* הוספת מחלקת navbar */}
       <Toolbar>
         {/* <Typography variant="h6" sx={{ flexGrow: 1 }}>
           Song Manager כותרת סרגל הניווט
         </Typography> */}
 
         { /* כפתור לפתיחת המודאל */}
-        <Button sx={{flexGrow:5 }} color="inherit" onClick={() => setOpenModal(true)}>
+        <Button sx={{ flexGrow: 5 }} color="inherit" onClick={() => setOpenModal(true)}>
           Add Song
         </Button>
-        
-        <FormControl sx={{ minWidth: 120, marginRight: 2}}> {/* רכיב לבחירת קריטריון סינון */}
+
+        <FormControl sx={{ minWidth: 120, marginRight: 2 }}> {/* רכיב לבחירת קריטריון סינון */}
           <InputLabel>Filter By</InputLabel>
           <Select
             name="filterBy"
-            value={filterCriteria?.filterBy || "All"} // השתמש בערך ברירת מחדל אם filterBy לא קיים
-            onChange={(event) => {
-              handleChange(event);
-            }}
+            value={filterCriteria.filterBy || "All"} // השתמש בערך ברירת מחדל אם filterBy לא קיים
+            // onChange={(event) => {
+            //   handleChange(event);
+            // }}
+            onChange={handleChange}
           >
             <MenuItem value="All">All</MenuItem>
             <MenuItem value="Category">Category</MenuItem>

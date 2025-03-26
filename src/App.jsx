@@ -3,8 +3,9 @@ import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import HomePage from "./pages/HomePage";
+import SingersPage from "./components/redux/singer/SingersPage";
 // import AddSongPage from "./components/redux/song/AddSongPage";
-import SongPlayer from "./components/redux/song/SongPlayer";
+// import SongPlayer from "./components/redux/song/SongPlayer";
 import Navbar from "./components/Navbar";
 import { fetchSongs } from "./components/redux/song/songSlice";
 
@@ -16,16 +17,17 @@ function App() {
   //     console.log("Fetched songs:", result);
   //   });
   // }, [dispatch]);
-  
 
   return (
     <>
-    <Navbar />
     {/* <HomePage/> */}
     
     <Router>
+    <Navbar />
+
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/singers" element={<SingersPage />} />
         {/* <Route path="/add-song" element={<AddSongPage />} />
         <Route path="/player" element={<SongPlayer />} /> */}
       </Routes>

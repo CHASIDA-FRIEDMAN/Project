@@ -34,7 +34,11 @@ const Navbar = () => {
         navigate('/'); // חזרה לדף הראשי עם כל השירים
       } else if (value === "Singer") {
         navigate('/singers'); // ניוד לדף זמרים
-      }
+      } else if (value === "Album") {
+        navigate('/albums'); // ניוד לדף זמרים
+      } else if (value === "Category") {
+        navigate('/categories'); // ניוד לדף זמרים
+      } 
     }
   };
   // setFilterCriteria({

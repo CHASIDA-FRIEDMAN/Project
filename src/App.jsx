@@ -8,6 +8,8 @@ import SingersPage from "./components/redux/singer/SingersPage";
 // import SongPlayer from "./components/redux/song/SongPlayer";
 import Navbar from "./components/Navbar";
 import { fetchSongs } from "./components/redux/song/songSlice";
+import AlbumsPage from "./components/redux/album/AlbumsPage";
+import CategoriesPage from "./components/redux/category/CategoriesPage";
 
 function App() {
   // const dispatch = useDispatch();
@@ -28,6 +30,9 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/singers" element={<SingersPage />} />
+        <Route path="/albums" element={<AlbumsPage />} />
+        <Route path="/categories" element={<CategoriesPage/>} />
+
         {/* <Route path="/add-song" element={<AddSongPage />} />
         <Route path="/player" element={<SongPlayer />} /> */}
       </Routes>

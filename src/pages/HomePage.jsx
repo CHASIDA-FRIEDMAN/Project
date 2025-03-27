@@ -5,12 +5,16 @@ import { Grid, Typography, CircularProgress, Button, Alert } from "@mui/material
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import SongCard from "../components/redux/song/SongCard";
 import { Box } from '@mui/material';
+import SongPlayer from "../components/redux/song/SongPlayer";
+import { playSong } from '../components/redux/song/songSlice';
+import { stopSong } from '../components/redux/song/songSlice';
 
 
 const HomePage = () => {
   const dispatch = useDispatch();
   const songs = useSelector((state) => state.song.songs);
   const error = useSelector((state) => state.song.error); // קבלת השגיאה מ-Redux
+  const currentSong = useSelector((state) => state.song.currentSong);
 
   const [page, setPage] = useState(1);
   const pageSize = 18;
@@ -24,6 +28,12 @@ const HomePage = () => {
       window.scrollTo(0, 0);
     }, 2000);
   };
+
+  
+  const handlePlaySong = (song) => {
+    dispatch(playSong(song));
+  }
+
 
   return (
     <div>
@@ -48,7 +58,8 @@ const HomePage = () => {
           <Grid container spacing={3} sx={{ display: "flex", justifyContent: "center" }}>
             {songs.map((song) => (
               <Grid item xs={12} sm={6} md={4} key={song.id}>
-                <SongCard song={song} />
+                <SongCard song={song} onPlay={handlePlaySong} />
+
               </Grid>
             ))}
           </Grid>
@@ -94,6 +105,9 @@ const HomePage = () => {
           </div>
         </>
       )}
+ {/* הצגת נגן השיר */}
+ {currentSong && <SongPlayer song={currentSong} onClose={() => dispatch(stopSong())} />}
+
     </div>
   );
 };

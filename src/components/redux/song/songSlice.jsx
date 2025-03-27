@@ -7,7 +7,8 @@ const initialState = {
     currentSong: null,
     isPlaying: false,
     status: 'idle',
-    error: null
+    error: null,
+    volume: 0.5,
 };
 
 const BASE_URL = 'https://localhost:7250/api/Song';
@@ -16,6 +17,7 @@ const BASE_URL = 'https://localhost:7250/api/Song';
 // שליפת כל השירים עם תמיכה בדפדוף
 export const fetchSongs = createAsyncThunk('songs/fetchSongs', async ({ page, pageSize }) => {
     const response = await axios.get(`${BASE_URL}?page=${page}&pageSize=${pageSize}`);
+    console.log(response.data);
     return response.data;
 });
 
@@ -77,19 +79,25 @@ export const addSong = createAsyncThunk('songs/addSong', async (file) => {
     return await SongService.addSong(file);
 });
 
+// פעולת הפעלת שיר
+export const playSong = createAsyncThunk('songs/playSong', async (song) => {
+    return song;  // מחזיר את השיר שנבחר לניגון
+  });
+  
+  // פעולת השהיית שיר
+  export const stopSong = createAsyncThunk('songs/stopSong', async () => {
+    return null;  // מחזיר null כשלוחצים על pause
+  });
+
 const songsSlice = createSlice({
     name: 'songs',
     initialState,
     reducers: {
-        playSong: (state, action) => {
-            state.currentSong = action.payload;
-            state.isPlaying = true;
+        setVolume: (state, action) => {
+            state.volume = action.payload;
         },
-        stopSong: (state) => {
-            state.isPlaying = false;
-        },
-        setFilter: (state, action) => {
-            state.filter = { ...state.filter, ...action.payload };
+        togglePlay: (state) => {
+            state.isPlaying = !state.isPlaying;
         }
     },
     extraReducers: (builder) => {
@@ -146,9 +154,22 @@ const songsSlice = createSlice({
                 state.status = 'failed';
                 state.error = action.payload || "שגיאה בטעינת השירים"; // הוספנו את הטיפול בשגיאה שנשלחת אם יש
             })
+            .addCase(playSong.fulfilled, (state, action) => {
+                state.currentSong = action.payload;
+                state.isPlaying = true;
+              })
+              .addCase(stopSong.fulfilled, (state) => {
+                state.isPlaying = false;
+                state.currentSong = null;
+              })
+              .addCase(playSong.rejected, (state) => {
+                state.isPlaying = false;
+              });
 
     }
 });
 
-export const { playSong, stopSong, setFilter } = songsSlice.actions;
+export const {setVolume,togglePlay} = songsSlice.actions;
+
+
 export default songsSlice.reducer;

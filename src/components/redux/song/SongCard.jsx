@@ -5,13 +5,27 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { updateSong } from './songSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { playSong } from './songSlice';
+import { useState } from 'react';
 
-const SongCard = ({ song, onPlay }) => {
-  const dispatch = useDispatch(); // שימוש ב-dispatch של Redux
+
+const SongCard = ({ song,onPlay}) => {
+  const [expanded, setExpanded] = useState(false);
+  const dispatch = useDispatch();
+
   const onFavoriteToggle = () => {
-    const updatedSong = { ...song, favorite: !song.favorite }; // הפיכת הערך של favorite
-    dispatch(updateSong(updatedSong)); // שליחת העדכון ל-Redux
+    const updatedSong = { ...song, favorite: !song.favorite };
+    dispatch(updateSong(updatedSong));
   };
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
+  const handlePlayClick = () => {
+    onPlay(song) // זה יפעיל את השיר ב-Redux
+  };
+  
 
   return (
     <Card sx={{ maxWidth: 345, display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -20,15 +34,16 @@ const SongCard = ({ song, onPlay }) => {
         height="300"
         image={song.image ? `data:image/jpg;base64,${song.image}` : '/default-image.jpg'}
         alt={song.name}
+        onClick={handleExpandClick}
       />
       <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         <Tooltip title={song.name} arrow>
           <Box sx={{
-            height: 50,  // גובה קבוע לכותרת
+            height: 50,
             overflow: 'hidden',
             display: '-webkit-box',
             WebkitBoxOrient: 'vertical',
-            WebkitLineClamp: 2, // מגביל לשתי שורות בלבד
+            WebkitLineClamp: 2,
             textOverflow: 'ellipsis',
             cursor: 'pointer'
           }}>
@@ -43,13 +58,21 @@ const SongCard = ({ song, onPlay }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <IconButton onClick={onPlay} color="primary">
+        <IconButton onClick={handlePlayClick} color="primary">
           <PlayArrowIcon />
         </IconButton>
         <IconButton onClick={onFavoriteToggle} color="error">
           {song.favorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
         </IconButton>
       </CardActions>
+      {expanded && (
+        <Box sx={{ padding: 2 }}>
+          <Typography variant="body2">Additional details:</Typography>
+          <Typography variant="body2" color="textSecondary">
+            {song.lyrics}
+          </Typography>
+        </Box>
+      )}
     </Card>
   );
 };

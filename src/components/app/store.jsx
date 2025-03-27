@@ -6,8 +6,6 @@ import categoriesSlice from '../redux/category/categorySlice'
 import filterReducer from '../redux/filter/filterSlice'
 import { Category } from "@mui/icons-material";
 
-
-
 // ייבוא הפונקציה configureStore מ-@reduxjs/toolkit
 export const store = configureStore({
     // הגדרת ה-reducer הראשי של ה-store

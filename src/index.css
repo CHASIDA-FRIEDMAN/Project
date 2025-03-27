@@ -74,7 +74,6 @@ button:focus-visible {
 
 .custom-navbar {
   background-color: #c14c4c !important;
-  position: sticky;
 }
 
 /* עבור התיבות עם Select */
@@ -86,5 +85,11 @@ button:focus-visible {
 .MuiFormControl-root .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
   border-color: white; /* צבע מסגרת לבן כאשר התיבה בפוקוס */
 }
+
+* {
+  font-family: 'Fredoka', sans-serif !important;
+}
+
+
 
 

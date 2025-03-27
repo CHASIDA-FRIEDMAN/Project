@@ -6,12 +6,6 @@ const initialState = {
     songs: [],
     currentSong: null,
     isPlaying: false,
-    // filter: {
-    //     genre: "All",
-    //     rhythm: "All",
-    //     favorite: "All",
-    //     recent: "All",
-    // },
     status: 'idle',
     error: null
 };
@@ -24,9 +18,6 @@ export const fetchSongs = createAsyncThunk('songs/fetchSongs', async ({ page, pa
     const response = await axios.get(`${BASE_URL}?page=${page}&pageSize=${pageSize}`);
     return response.data;
 });
-
-// export const fetchSongs = createAsyncThunk('songs/fetchSongs', async () => {
-//     return await SongService.getAllSongs();
 
 // שליפת שירים לפי זמר
 export const fetchSongsBySinger = createAsyncThunk('songs/fetchBySinger', async (singerId) => {
@@ -45,26 +36,33 @@ export const fetchSongsByAlbum = createAsyncThunk('songs/fetchByAlbum', async (a
 //     const response = await axios.get(`${BASE_URL}/filtered`, { params: filters });
 //     return response.data;
 // });
+
 export const fetchFilteredSongs = createAsyncThunk(
     'songs/fetchFilteredSongs',
-    async (filters) => {
-      // תיקון הערכים לפני השליחה לשרת
-      const fixedFilters = {
-        genre: filters.genre || "All",
-        rhythm: filters.rhythm || "All",
-        favorite: filters.favorite === "Favorite" ? "Favorite" : "All",
-        recent: filters.recent === "Recent" ? "Recent" : "All",
-      };
-  
-      console.log("Filters sent to server:", fixedFilters); // בדיקה שהנתונים תקינים
-  
-      const response = await axios.get(`${BASE_URL}/filtered`, { params: fixedFilters });
-      return response.data;
+    async (filters, { rejectWithValue }) => {
+        try {
+            const fixedFilters = {
+                genre: filters.genre || "All",
+                rhythm: filters.rhythm || "All",
+                favorite: filters.favorite === "Favorite" ? "Favorite" : "All",
+                recent: filters.recent === "Recent" ? "Recent" : "All",
+            };
+
+            console.log("Filters sent to server:", fixedFilters);
+
+            const response = await axios.get(`${BASE_URL}/filtered`, { params: fixedFilters });
+
+            // אם חזר מערך ריק, מחזירים הודעה מיוחדת
+            if (response.data.length === 0) {
+                return rejectWithValue("לא נמצאו שירים התואמים לקריטריונים");
+            }
+
+            return response.data;
+        } catch (error) {
+            return rejectWithValue("שגיאה בטעינת השירים");
+        }
     }
-  );
-  
-
-
+);
 
 export const deleteSong = createAsyncThunk('songs/deleteSong', async (songId) => {
     await SongService.deleteSong(songId);
@@ -114,7 +112,6 @@ const songsSlice = createSlice({
                 const index = state.songs.findIndex(song => song.id === action.payload.id);
                 if (index !== -1) {
                     state.songs[index] = action.payload;
-
                 }
             })
             .addCase(addSong.fulfilled, (state, action) => {
@@ -123,30 +120,35 @@ const songsSlice = createSlice({
             .addCase(fetchSongsBySinger.pending, (state) => {
                 state.status = 'loading';
             })
-        .addCase(fetchSongsBySinger.fulfilled, (state, action) => {
-            state.status = 'succeeded';
-            state.songs = action.payload;
-        })
-        .addCase(fetchSongsBySinger.rejected, (state, action) => {
-            state.status = 'failed';
-            state.error = action.error.message;
-        })
-        .addCase(fetchSongsByAlbum.pending, (state) => {
-            state.status = 'loading';
-        })
-        .addCase(fetchSongsByAlbum.fulfilled, (state, action) => {
-            state.status = 'succeeded';
-            state.songs = action.payload;
-        })
-        .addCase(fetchSongsByAlbum.rejected, (state, action) => {
-            state.status = 'failed';
-            state.error = action.error.message;
-        })
-        .addCase(fetchFilteredSongs.fulfilled, (state, action) => {
-            state.songs = action.payload;
-        })
-        
-}});
+            .addCase(fetchSongsBySinger.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.songs = action.payload;
+            })
+            .addCase(fetchSongsBySinger.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(fetchSongsByAlbum.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(fetchSongsByAlbum.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.songs = action.payload;
+            })
+            .addCase(fetchSongsByAlbum.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message;
+            })
+            .addCase(fetchFilteredSongs.fulfilled, (state, action) => {
+                state.songs = action.payload;
+            })
+            .addCase(fetchFilteredSongs.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.payload || "שגיאה בטעינת השירים"; // הוספנו את הטיפול בשגיאה שנשלחת אם יש
+            })
+
+    }
+});
 
 export const { playSong, stopSong, setFilter } = songsSlice.actions;
 export default songsSlice.reducer;

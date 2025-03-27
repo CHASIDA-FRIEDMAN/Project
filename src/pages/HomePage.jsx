@@ -1,71 +1,64 @@
-
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSongs } from "../components/redux/song/songSlice";
-import { fetchAlbums } from "../components/redux/album/albumSlice";
-import { fetchSingers } from "../components/redux/singer/SingerSlice";
-import { fetchCategories } from "../components/redux/category/categorySlice";
-import { Grid, Typography, CircularProgress, Button } from "@mui/material";
-import SongCard from "../components/redux/song/SongCard";
+import { fetchSongs, fetchFilteredSongs } from "../components/redux/song/songSlice";
+import { Grid, Typography, CircularProgress, Button, Alert } from "@mui/material"; // הוספת רכיב Alert להודעה
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
-import { alignProperty } from "@mui/material/styles/cssUtils";
+import SongCard from "../components/redux/song/SongCard";
+import { Box } from '@mui/material';
+
 
 const HomePage = () => {
-  console.log("Rendering HomePage");
-
-  const songs = useSelector((state) => state.song.songs);
-
-  useEffect(() => {
-    console.log("Songs updated:", songs); // לוודא שהרשימה מתעדכנת
-  }, [songs]);
-
   const dispatch = useDispatch();
+  const songs = useSelector((state) => state.song.songs);
+  const error = useSelector((state) => state.song.error); // קבלת השגיאה מ-Redux
 
   const [page, setPage] = useState(1);
-  const pageSize = 18; // מספר השירים בכל עמוד
+  const pageSize = 18;
 
   useEffect(() => {
-    dispatch(fetchSongs({ page, pageSize })); // קריאה ל-API עם עימוד
+    dispatch(fetchSongs({ page, pageSize })); // שליפת שירים בעמוד הנוכחי
   }, [dispatch, page]);
 
-
-  const handlePlay = (song) => {
-    console.log("Playing song:", song.name);
-    // כאן תוכל להוסיף לוגיקה להפעלת השיר, כמו עדכון הסטייט של נגן המוזיקה
-  };
-
-
-
-  // פונקציה להחזרת הדף לראש לאחר עיכוב של שניה
   const scrollToTop = () => {
     setTimeout(() => {
       window.scrollTo(0, 0);
-    }, 2000); // מחכים שניה לפני הגלילה
+    }, 2000);
   };
 
   return (
     <div>
       <Typography variant="h4" align="center" color="white">All Songs</Typography>
 
+{/* הצגת הודעת שגיאה אם לא נמצאו שירים */}
+    {error && (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center',height:'22vh'}}>
+    <Alert severity="info" sx={{ marginTop: 2 }}>
+      {error}
+    </Alert>
+   </Box>
+  )}
+
+
       {songs.length === 0 ? (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", color: "white" }}>
-          <CircularProgress size={100} color="inherit" /> {/* גודל גדול יותר של הטעינה */}
+          <CircularProgress size={100} color="inherit" />
         </div>
       ) : (
         <>
           <Grid container spacing={3} sx={{ display: "flex", justifyContent: "center" }}>
-              {songs.map((song) => (
-                <Grid item xs={12} sm={6} md={4} key={song.id}>
-                  <SongCard song={song} onPlay={() => handlePlay(song)} />
-                </Grid>
-              ))}
-            </Grid> 
+            {songs.map((song) => (
+              <Grid item xs={12} sm={6} md={4} key={song.id}>
+                <SongCard song={song} />
+              </Grid>
+            ))}
+          </Grid>
+
           {/* ניווט בין עמודים */}
           <div style={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
             <Button
               onClick={() => {
                 setPage(page - 1);
-                scrollToTop(); // גלילה לראש העמוד לאחר שניה
+                scrollToTop();
               }}
               disabled={page === 1}
               variant="contained"
@@ -76,17 +69,15 @@ const HomePage = () => {
                 width: "50px",
                 height: "50px",
                 borderRadius: "50%",
-                "&:hover": { backgroundColor: "#f0f0f0" }, // צבע רקע מעט שונה בלחיצה
               }}
             >
               <ArrowBack />
             </Button>
             <Typography variant="h6" color="white" marginLeft={2} marginRight={2}>Page {page}</Typography>
             <Button
-              margin={1}
               onClick={() => {
                 setPage(page + 1);
-                scrollToTop(); // גלילה לראש העמוד לאחר שניה
+                scrollToTop();
               }}
               variant="contained"
               sx={{
@@ -96,7 +87,6 @@ const HomePage = () => {
                 width: "50px",
                 height: "50px",
                 borderRadius: "50%",
-                "&:hover": { backgroundColor: "#f0f0f0" }, // צבע רקע מעט שונה בלחיצה
               }}
             >
               <ArrowForward />

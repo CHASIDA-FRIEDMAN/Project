@@ -10,8 +10,8 @@ import Navbar from "./components/Navbar";
 import { fetchSongs } from "./components/redux/song/songSlice";
 import AlbumsPage from "./components/redux/album/AlbumsPage";
 import CategoriesPage from "./components/redux/category/CategoriesPage";
-import SingerSongsPage from "./components/redux/song/SingerSongsPage";
-import AlbumSongsPage from "./components/redux/song/AlbumSongsPage copy";
+import SingerSongsPage from "./pages/SingerSongsPage";
+import AlbumSongsPage from "./pages/AlbumSongsPage";
 
 function App() {
 

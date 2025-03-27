@@ -1,4 +1,4 @@
-import React, { useEffect, useRef,useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, IconButton, Typography, Slider, Box } from '@mui/material';
 import { Close, PlayArrow, Pause, VolumeUp } from '@mui/icons-material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,41 +9,55 @@ const SongPlayer = ({ song, onClose }) => {
   const dispatch = useDispatch();
   const isPlaying = useSelector((state) => state.song.isPlaying);
   const volume = useSelector((state) => state.song.volume);
-  const [currentTime, setCurrentTime] = useState(0); // זמן נוכחי בשיר
+  const [audioUrl, setAudioUrl] = useState(null);
+  const [currentTime, setCurrentTime] = useState(0);
 
-
-  // כל פעם ש-song משתנה או isPlaying משתנה, נוודא שהשיר מתחיל/עוצר כראוי
+  // יצירת URL רק כאשר השיר משתנה
   useEffect(() => {
-    if (song && audioRef.current) {
-      audioRef.current.load(); // נטען את השיר
+    if (song?.songData) {
+      const audioData = new Blob([new Uint8Array(atob(song.songData).split("").map(char => char.charCodeAt(0)))], { type: 'audio/mpeg' });
+      const newUrl = URL.createObjectURL(audioData);
+      setAudioUrl(newUrl);
 
+      return () => URL.revokeObjectURL(newUrl); // ניקוי ה-URL כאשר השיר משתנה
+    }
+  }, [song]);
+
+  // הפעלת השיר אוטומטית כשה-URL מוכן
+  useEffect(() => {
+    if (audioRef.current && audioUrl) {
+      audioRef.current.src = audioUrl;
+      audioRef.current.currentTime = currentTime;
+      audioRef.current.volume = volume;
+      
       if (isPlaying) {
-        audioRef.current.play(); // אם שחקן מנגן, נתחיל לנגן
-      } else {
-        audioRef.current.pause(); // אם לא, נעצור את השיר
+        audioRef.current.play();
       }
-    } else {
-      // אם אין שיר, נפסיק את ההשמעה
-      if (audioRef.current) {
+    }
+  }, [audioUrl]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+      if (isPlaying) {
+        audioRef.current.play();
+      } else {
+        setCurrentTime(audioRef.current.currentTime);
         audioRef.current.pause();
       }
     }
-  }, [song, isPlaying]); // כל פעם ש-song או isPlaying משתנים, מתעדכן השיר
+  }, [isPlaying]);
 
   const handleVolumeChange = (event, newValue) => {
     if (audioRef.current) {
       audioRef.current.volume = newValue;
     }
-    dispatch(setVolume(newValue)); // עדכון הווליום ב-redux
+    dispatch(setVolume(newValue));
   };
 
   const handleTogglePlay = () => {
-    dispatch(togglePlay()); // הפעלת/הפסקת השיר
+    dispatch(togglePlay());
   };
-
-  // יצירת ה-URL של השיר מהנתונים הבינאריים (dome לתמונה)
-  const audioData = new Blob([new Uint8Array(atob(song?.songData).split("").map(char => char.charCodeAt(0)))], { type: 'audio/mpeg' });
-  const audioUrl = URL.createObjectURL(audioData);
 
   return (
     <Dialog open={!!song} onClose={onClose} fullWidth maxWidth="sm">
@@ -55,9 +69,7 @@ const SongPlayer = ({ song, onClose }) => {
       </DialogTitle>
       <DialogContent>
         <Typography variant="subtitle1">{song?.singer}</Typography>
-        <audio ref={audioRef} src={audioUrl} onEnded={() => { dispatch(playNextSong()); }} autoPlay>
-  <source src={audioUrl} type="audio/mpeg" />
-</audio>
+        <audio ref={audioRef} />
 
         <Box display="flex" alignItems="center" justifyContent="center" sx={{ mt: 2 }}>
           <IconButton onClick={handleTogglePlay} color="primary">

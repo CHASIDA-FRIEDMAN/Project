@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilterCriteria } from './redux/filter/filterSlice';
 import AddIcon from '@mui/icons-material/Add';
+import { fetchFilteredSongs } from './redux/song/songSlice';
 
 
 
@@ -42,7 +43,7 @@ const Navbar = () => {
 
   // פונקציה ליישום הסינון
   const handleApplyFilters = () => {
-    applyFilters(); // קריאה לפונקציה applyFilters
+    dispatch(fetchFilteredSongs(filterCriteria));
   };
 
   return (

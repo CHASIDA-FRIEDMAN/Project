@@ -6,12 +6,12 @@ const initialState = {
     songs: [],
     currentSong: null,
     isPlaying: false,
-    filter: {
-        genre: "All",
-        rhythm: "All",
-        favorite: "All",
-        recent: "All",
-    },
+    // filter: {
+    //     genre: "All",
+    //     rhythm: "All",
+    //     favorite: "All",
+    //     recent: "All",
+    // },
     status: 'idle',
     error: null
 };
@@ -39,6 +39,31 @@ export const fetchSongsByAlbum = createAsyncThunk('songs/fetchByAlbum', async (a
     const response = await axios.get(`${BASE_URL}/getByAlbumId/${albumId}`);
     return response.data;
 });
+
+// export const fetchFilteredSongs = createAsyncThunk('songs/fetchFilteredSongs', async (filters) => {
+//     console.log(filters);
+//     const response = await axios.get(`${BASE_URL}/filtered`, { params: filters });
+//     return response.data;
+// });
+export const fetchFilteredSongs = createAsyncThunk(
+    'songs/fetchFilteredSongs',
+    async (filters) => {
+      // תיקון הערכים לפני השליחה לשרת
+      const fixedFilters = {
+        genre: filters.genre || "All",
+        rhythm: filters.rhythm || "All",
+        favorite: filters.favorite === "Favorite" ? "Favorite" : "All",
+        recent: filters.recent === "Recent" ? "Recent" : "All",
+      };
+  
+      console.log("Filters sent to server:", fixedFilters); // בדיקה שהנתונים תקינים
+  
+      const response = await axios.get(`${BASE_URL}/filtered`, { params: fixedFilters });
+      return response.data;
+    }
+  );
+  
+
 
 
 export const deleteSong = createAsyncThunk('songs/deleteSong', async (songId) => {
@@ -117,6 +142,10 @@ const songsSlice = createSlice({
             state.status = 'failed';
             state.error = action.error.message;
         })
+        .addCase(fetchFilteredSongs.fulfilled, (state, action) => {
+            state.songs = action.payload;
+        })
+        
 }});
 
 export const { playSong, stopSong, setFilter } = songsSlice.actions;

@@ -53,7 +53,7 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static" className="custom-navbar" sx={{ marginTop: 0, width: 1250 }}> {/* הוספת מחלקת navbar */}
+    <AppBar position="static" className="custom-navbar" sx={{width: 1250 }}> {/* הוספת מחלקת navbar */}
       <Toolbar>
         {/* <Typography variant="h6" sx={{ flexGrow: 1 }}>
           Song Manager כותרת סרגל הניווט

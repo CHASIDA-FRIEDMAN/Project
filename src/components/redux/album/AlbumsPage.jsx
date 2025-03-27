@@ -7,7 +7,7 @@ import AlbumCard from "./AlbumCard";
 const AlbumsPage = () => {
     const dispatch = useDispatch();
     const albums = useSelector(state => state.album.albums);
-
+    console.log(albums);  // להדפיס את האלבומים לפני ההצגה
     useEffect(() => {
         dispatch(fetchAlbums());
     }, [dispatch]);

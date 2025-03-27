@@ -6,6 +6,9 @@ import { fetchSingers } from "../components/redux/singer/SingerSlice";
 import { fetchCategories } from "../components/redux/category/categorySlice";
 import { Grid, Typography, CircularProgress, Button } from "@mui/material";
 import SongCard from "../components/redux/song/SongCard";
+import { ArrowBack, ArrowForward } from "@mui/icons-material";
+
+
 
 const HomePage = () => {
   console.log("Rendering HomePage");
@@ -56,8 +59,8 @@ const HomePage = () => {
       <Typography variant="h4" align="center" color="white">All Songs</Typography>
 
       {songs.length === 0 ? (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-          <CircularProgress size={100} /> {/* גודל גדול יותר של הטעינה */}
+        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" ,color:"white"}}>
+          <CircularProgress size={100} color="inherit" /> {/* גודל גדול יותר של הטעינה */}
         </div>
       ) : (
         <>
@@ -78,22 +81,37 @@ const HomePage = () => {
               }}
               disabled={page === 1}
               variant="contained"
-              color="primary"
-              style={{ marginRight: "10px" }}
+              sx={{
+                backgroundColor: "white",
+                color: "rgb(20, 72, 79)",
+                minWidth: "50px",
+                width: "50px",
+                height: "50px",
+                borderRadius: "50%",
+                "&:hover": { backgroundColor: "#f0f0f0" }, // צבע רקע מעט שונה בלחיצה
+              }}
             >
-              Previous
+              <ArrowBack />
             </Button>
-            <Typography variant="h6" color="white">Page {page}</Typography>
+            <Typography variant="h6" color="white" marginLeft={2} marginRight={2}>Page {page}</Typography>
             <Button
+            margin={1}
               onClick={() => {
                 setPage(page + 1);
                 scrollToTop(); // גלילה לראש העמוד לאחר שניה
               }}
               variant="contained"
-              color="primary"
-              style={{ marginLeft: "10px" }}
+              sx={{
+                backgroundColor: "white",
+                color: "rgb(20, 72, 79)",
+                minWidth: "50px",
+                width: "50px",
+                height: "50px",
+                borderRadius: "50%",
+                "&:hover": { backgroundColor: "#f0f0f0" }, // צבע רקע מעט שונה בלחיצה
+              }}
             >
-              Next
+              <ArrowForward />
             </Button>
           </div>
         </>

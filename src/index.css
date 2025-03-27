@@ -74,5 +74,17 @@ button:focus-visible {
 
 .custom-navbar {
   background-color: #c14c4c !important;
+  position: sticky;
 }
+
+/* עבור התיבות עם Select */
+.MuiFormControl-root .MuiInputLabel-root.Mui-focused {
+  color: rgb(0, 0, 0); /* צבע כיתוב לבן כאשר התיבה בפוקוס */
+}
+
+/* עבור מסגרת התיבה כאשר היא בפוקוס */
+.MuiFormControl-root .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-color: white; /* צבע מסגרת לבן כאשר התיבה בפוקוס */
+}
+
 

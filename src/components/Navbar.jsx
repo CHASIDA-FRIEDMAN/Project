@@ -5,6 +5,9 @@ import { Maximize } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setFilterCriteria } from './redux/filter/filterSlice';
+import AddIcon from '@mui/icons-material/Add';
+
+
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -53,18 +56,20 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static" className="custom-navbar" sx={{width: 1250 }}> {/* הוספת מחלקת navbar */}
+    <AppBar position="sticky" className="custom-navbar" sx={{width: 1270 }}> {/* הוספת מחלקת navbar */}
       <Toolbar>
         {/* <Typography variant="h6" sx={{ flexGrow: 1 }}>
           Song Manager כותרת סרגל הניווט
         </Typography> */}
 
         { /* כפתור לפתיחת המודאל */}
-        <Button sx={{ flexGrow: 5 }} color="inherit" onClick={() => setOpenModal(true)}>
-          Add Song
+        <Button variant="outlined" sx={{ minWidth: 30, marginRight: 2 }} color="inherit" onClick={() => setOpenModal(true)}   startIcon={<AddIcon />}
+        >
+           Add Song
         </Button>
 
-        <FormControl sx={{ minWidth: 120, marginRight: 2 }}> {/* רכיב לבחירת קריטריון סינון */}
+        <FormControl sx={{ minWidth:180, marginRight: 2 ,
+        }}> {/* רכיב לבחירת קריטריון סינון */}
           <InputLabel>Filter By</InputLabel>
           <Select
             name="filterBy"
@@ -81,7 +86,7 @@ const Navbar = () => {
           </Select>
         </FormControl>
 
-        <FormControl sx={{ minWidth: 120, marginRight: 2 }}> {/* רכיב לבחירת ז'אנר */}
+        <FormControl sx={{ minWidth:180, marginRight: 2 }}> {/* רכיב לבחירת ז'אנר */}
           <InputLabel>Genre</InputLabel>
           <Select
             name="genre"
@@ -99,7 +104,7 @@ const Navbar = () => {
           </Select>
         </FormControl>
 
-        <FormControl sx={{ minWidth: 120, marginRight: 2 }}> {/* רכיב לבחירת קצב */}
+        <FormControl sx={{ minWidth:180, marginRight: 2 }}> {/* רכיב לבחירת קצב */}
           <InputLabel>Rhythm</InputLabel>
           <Select
             name="rhythm"
@@ -112,7 +117,7 @@ const Navbar = () => {
           </Select>
         </FormControl>
 
-        <FormControl sx={{ minWidth: 120, marginRight: 2 }}> {/* רכיב לבחירת מועדפים */}
+        <FormControl sx={{ minWidth:180, marginRight: 2 }}> {/* רכיב לבחירת מועדפים */}
           <InputLabel>Favorite</InputLabel>
           <Select
             name="favorite"
@@ -124,7 +129,7 @@ const Navbar = () => {
           </Select>
         </FormControl>
 
-        <FormControl sx={{ minWidth: 120, marginRight: 2 }}> {/* רכיב לבחירת רשומות אחרונות */}
+        <FormControl sx={{ minWidth:180, marginRight: 2 }}> {/* רכיב לבחירת רשומות אחרונות */}
           <InputLabel>Recent</InputLabel>
           <Select
             name="recent"
@@ -136,7 +141,7 @@ const Navbar = () => {
           </Select>
         </FormControl>
 
-        <Button variant="contained" onClick={handleApplyFilters}> {/* כפתור ליישום הסינון */}
+        <Button variant="contained" sx={{ backgroundColor: "white", color: "#c14c4c" }} onClick={handleApplyFilters}> {/* כפתור ליישום הסינון */}
           Apply
         </Button>
       </Toolbar>
@@ -176,7 +181,7 @@ export default Navbar; // ייצוא הקומפוננטה Navbar
 
 //         { /* כפתור לפתיחת המודאל */}
 
-//         <FormControl sx={{ minWidth: 120, marginRight: 2 }}> {/* רכיב לבחירת קריטריון סינון */}
+//         <FormControl sx={{ minWidth:180, marginRight: 2 }}> {/* רכיב לבחירת קריטריון סינון */}
 //           <InputLabel>Filter By</InputLabel>
 //           <Select
 //             name="filterBy"
@@ -195,7 +200,7 @@ export default Navbar; // ייצוא הקומפוננטה Navbar
 //           </Select>
 //         </FormControl>
 
-//         <FormControl sx={{ minWidth: 120, marginRight: 2 }}> {/* רכיב לבחירת ז'אנר */}
+//         <FormControl sx={{ minWidth:180, marginRight: 2 }}> {/* רכיב לבחירת ז'אנר */}
 //           <InputLabel>Genre</InputLabel>
 //           <Select
 //             name="genre"
@@ -213,7 +218,7 @@ export default Navbar; // ייצוא הקומפוננטה Navbar
 //           </Select>
 //         </FormControl>
 
-//         <FormControl sx={{ minWidth: 120, marginRight: 2 }}> {/* רכיב לבחירת קצב */}
+//         <FormControl sx={{ minWidth:180, marginRight: 2 }}> {/* רכיב לבחירת קצב */}
 //           <InputLabel>Rhythm</InputLabel>
 //           <Select
 //             name="rhythm"
@@ -226,7 +231,7 @@ export default Navbar; // ייצוא הקומפוננטה Navbar
 //           </Select>
 //         </FormControl>
 
-//         <FormControl sx={{ minWidth: 120, marginRight: 2 }}> {/* רכיב לבחירת מועדפים */}
+//         <FormControl sx={{ minWidth:180, marginRight: 2 }}> {/* רכיב לבחירת מועדפים */}
 //           <InputLabel>Favorite</InputLabel>
 //           <Select
 //             name="favorite"
@@ -238,7 +243,7 @@ export default Navbar; // ייצוא הקומפוננטה Navbar
 //           </Select>
 //         </FormControl>
 
-//         <FormControl sx={{ minWidth: 120, marginRight: 2 }}> {/* רכיב לבחירת רשומות אחרונות */}
+//         <FormControl sx={{ minWidth:180, marginRight: 2 }}> {/* רכיב לבחירת רשומות אחרונות */}
 //           <InputLabel>Recent</InputLabel>
 //           <Select
 //             name="recent"

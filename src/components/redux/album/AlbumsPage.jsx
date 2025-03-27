@@ -16,8 +16,8 @@ const AlbumsPage = () => {
         <div>
             <Typography variant="h4" align="center" color="white">All Albums</Typography>
             {albums.length === 0 ? (
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                    <CircularProgress size={100} />
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' ,color:"white"}}>
+                    <CircularProgress size={100} color="inherit" />
                 </div>
             ) : (
                 <Grid container spacing={3}>
